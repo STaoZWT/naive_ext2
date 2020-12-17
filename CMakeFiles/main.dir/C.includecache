@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/root/Desktop/OS_Lab5/disk.c
+disk.h
+/root/Desktop/OS_Lab5/disk.h
+stdio.h
+-
+
+/root/Desktop/OS_Lab5/disk.h
+
+/root/Desktop/OS_Lab5/main.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+stdint-gcc.h
+-
+disk.h
+/root/Desktop/OS_Lab5/disk.h
+
+/root/Desktop/OS_Lab5/test.c
+

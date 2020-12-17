@@ -1,0 +1,17 @@
+[
+{
+  "directory": "/root/Desktop/OS_Lab5/build",
+  "command": "/usr/bin/gcc-7  -I/root/Desktop/OS_Lab5/.  -g   -o CMakeFiles/main.dir/disk.c.o   -c /root/Desktop/OS_Lab5/disk.c",
+  "file": "/root/Desktop/OS_Lab5/disk.c"
+},
+{
+  "directory": "/root/Desktop/OS_Lab5/build",
+  "command": "/usr/bin/gcc-7  -I/root/Desktop/OS_Lab5/.  -g   -o CMakeFiles/main.dir/main.c.o   -c /root/Desktop/OS_Lab5/main.c",
+  "file": "/root/Desktop/OS_Lab5/main.c"
+},
+{
+  "directory": "/root/Desktop/OS_Lab5/build",
+  "command": "/usr/bin/gcc-7  -I/root/Desktop/OS_Lab5/.  -g   -o CMakeFiles/main.dir/test.c.o   -c /root/Desktop/OS_Lab5/test.c",
+  "file": "/root/Desktop/OS_Lab5/test.c"
+}
+]
