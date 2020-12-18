@@ -1,4 +1,6 @@
 # naive_ext2
+## 简介
+- 本项目完成了一个实现了有限功能的类EXT2文件系统，并基于该文件系统实现了一个具有简单功能的shell。
 ## 限制
 - 文件系统大小：4MB
 - 单个文件最大大小：6KB
@@ -41,12 +43,18 @@
 ### ln
 - 格式：`ln file1 file2`
 - 功能：将建立`file2`到`file1`的硬链接
+### spblock
+- 格式：`spblock`
+- 功能：用于debug，查看当前超级块的相关信息
 ### shutdown
 - 格式：`shutdown`
 - 功能：关闭文件系统
 
 ## 使用方式
+### Linux下自行编译运行
 - 请确保系统中已经安装cmake, make和gcc
 - 进入到项目目录中，依次使用`cmake .`初始化cmake，使用`make`编译程序，然后使用`./main`执行程序即可。
+### Windows下运行演示版
+- 下载并运行项目中的naive-ext2.exe即可。
 
 ## Have fun !
