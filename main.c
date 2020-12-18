@@ -15,34 +15,39 @@
 #define VALID 1
 #define INVALID 0
 #define MAX_BLOCK_POINT 6
+#define MAX_CACHE_NUM 92
 
+typedef struct {
+    uint16_t block_no;
+    uint8_t cache_no;
+    uint8_t has_saved_valid;
+} cache_info;
 
 typedef struct super_block{
-    int32_t magic_num;
-    int32_t free_block_count;
-    int32_t free_inode_count;
-    int32_t dir_inode_count;
-    uint32_t block_map[128];
-    uint32_t inode_map[32];
-    int32_t unused_data[92];
+    int32_t magic_num; //幻数
+    int32_t free_block_count; //空闲数据块数
+    int32_t free_inode_count; //空闲inode数
+    int32_t dir_inode_count;  //目录inode数
+    uint32_t block_map[128]; //数据块占用map
+    uint32_t inode_map[32]; //inode占用map
+    cache_info cache[92]; //缓存映射
 } sp_block;
 
 // inode: 32 + 16 + 16 + 192 = 256 Bit each
 // Total 1024 inodes allocate 1024 * (256 / 8) / 512 = 64 Blocks
 // From Block 1 to Block 64
 typedef struct{
-    uint32_t size;
-    uint16_t file_type;
-    uint16_t link;
-    //-1代表无效，0-4095代表相应的数据块
-    uint32_t block_point[6];
+    uint32_t size; //文件大小
+    uint16_t file_type; //文件类型
+    uint16_t link; //文件链接数
+    uint32_t block_point[6];//-1代表无效，0-4095代表相应的数据块
 } inode;
 
 typedef struct{
-    uint32_t inode_id;
-    uint16_t valid;
-    uint8_t type;
-    char name[121];
+    uint32_t inode_id; //inode号
+    uint16_t valid; //是否有效
+    uint8_t type; //类型
+    char name[121]; //名字
 } dir_item;
 
 /**
@@ -131,6 +136,13 @@ uint32_t parse_path(char *path_in, char **path_out) {
     }
 }
 
+/**
+ * @brief 对输入的命令进行分词，返回参数的数量
+ * 
+ * @param path_in 
+ * @param path_out 
+ * @return uint32_t
+ */
 uint32_t parse_args(char *path_in, char **path_out) {
     uint32_t len = strlen(path_in);
     uint32_t i;
@@ -331,7 +343,12 @@ void init_superblock() {
     sp_ptr->block_map[1] = 0x80000000;
 
     memset(sp_ptr->inode_map, 0, sizeof(sp_ptr->inode_map));
-    memset(sp_ptr->unused_data, -1, sizeof(sp_ptr->unused_data));
+    // memset(sp_ptr->unused_data, -1, sizeof(sp_ptr->unused_data));
+    for (int i = 0; i < MAX_CACHE_NUM; i++) {
+        sp_ptr->cache[i].block_no = 0;
+        sp_ptr->cache[i].cache_no = i;
+        sp_ptr->cache[i].has_saved_valid = 0;
+    }
     write_fileblock((char*) sp_ptr, 0);
     free(sp_ptr);
 }
@@ -359,7 +376,7 @@ sp_block *read_superblock_data() {
  * @param sp_ptr 指向超级块结构体的指针
  * @return 写入成功返回0,否则返回-1
  */
-int write_superblock_data(sp_block *sp_ptr) {
+uint32_t write_superblock_data(sp_block *sp_ptr) {
     // char *buf = (char *)calloc(DEVICE_BLOCK_SIZE, sizeof(char));
     // memcpy(buf, sp_ptr, DEVICE_BLOCK_SIZE);
     // if (disk_write_block(0, buf) == -1)
