@@ -1,1 +1,0 @@
-/usr/bin/gcc-7 -g  -rdynamic CMakeFiles/main.dir/disk.c.o CMakeFiles/main.dir/main.c.o CMakeFiles/main.dir/test.c.o  -o main 
