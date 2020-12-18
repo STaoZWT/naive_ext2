@@ -7,5 +7,3 @@ CMakeFiles/main.dir/disk.c.o: disk.h
 CMakeFiles/main.dir/main.c.o: disk.h
 CMakeFiles/main.dir/main.c.o: main.c
 
-CMakeFiles/main.dir/test.c.o: test.c
-
