@@ -1,3 +1,0 @@
-/root/Desktop/OS_Lab5/CMakeFiles/rebuild_cache.dir
-/root/Desktop/OS_Lab5/CMakeFiles/main.dir
-/root/Desktop/OS_Lab5/CMakeFiles/edit_cache.dir

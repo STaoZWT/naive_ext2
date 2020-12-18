@@ -18,7 +18,7 @@
 
 
 typedef struct super_block{
-    int32_t magic_num;
+    int32_t magic_num; //magic number
     int32_t free_block_count;
     int32_t free_inode_count;
     int32_t dir_inode_count;
