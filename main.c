@@ -712,6 +712,7 @@ uint32_t find_inode_by_path(uint32_t src_path_inode_no, char **parsed_path, uint
     for (int i = 0; i < path_count; i++) {
         if (i == 0 && !strcmp(parsed_path[0], "/")) {
             cur_inode = read_inode(ROOT_DIR_INDEX);
+            i++;
         } else {
             cur_inode = read_inode(cur_inode_no);
         }
@@ -725,7 +726,7 @@ uint32_t find_inode_by_path(uint32_t src_path_inode_no, char **parsed_path, uint
         }
         cur_inode_no = search_in_dir(cur_inode, parsed_path[i], TYPE_DIR);
         if (cur_inode_no == -1) {
-            printf("path not found");
+            printf("path not found\n");
             return -1;
         }
         
@@ -2026,7 +2027,7 @@ int main() {
                 printf("Free block count: %d\n", sp_ptr->free_block_count);
                 printf("Free inode count: %d\n", sp_ptr->free_inode_count);
                 printf("Dir inode count: %d\n", sp_ptr->dir_inode_count);
-                printf("Fileblock 32-63 allocation: %u\n", sp_ptr->block_map[1]);
+                printf("Fileblock 32-63 allocation: %x\n", sp_ptr->block_map[1]);
             } else if (!strcmp(path_out[0], "shutdown")) {
                 // printf("command: %s\n", path_out[0]);
                 printf("Will exit Naive EXT2 File System! Would you like to format the disk? (Y/N): ");
