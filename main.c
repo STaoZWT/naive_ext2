@@ -509,6 +509,7 @@ char *read_file(inode* inode_in) {
         read_buf += (DEVICE_BLOCK_SIZE * 2);
     }
     read_buf = read_buf - DEVICE_BLOCK_SIZE * 2 * block;
+    read_buf[inode_in->size] == '\0';
     // printf("%.2x%.2x\n", read_buf[6], read_buf[7]);
     return read_buf;
 }
@@ -561,17 +562,24 @@ uint32_t write_file(sp_block *sp_ptr, inode* inode_in, char *write_data) {
     } else {
         //新数据需要分配和原本一样的数据块
     }
-    char *buf = (char *)calloc(DEVICE_BLOCK_SIZE * 2, sizeof(char));
+    // char *buf = (char *)calloc(DEVICE_BLOCK_SIZE * 2, sizeof(char));
+    char *buf;
     int ptr = 0;
+    int file_len_const = file_len;
     for (int i = 0; i < new_block_count; i++) {
+        buf = (char *)calloc(DEVICE_BLOCK_SIZE * 2, sizeof(char));
         ptr = (file_len < 2 * DEVICE_BLOCK_SIZE) ? file_len : (2 * DEVICE_BLOCK_SIZE);
         if (file_len > 2 * DEVICE_BLOCK_SIZE) {
             file_len -= (2 * DEVICE_BLOCK_SIZE);
         } 
         memcpy(buf, write_data + (2 * i * DEVICE_BLOCK_SIZE), ptr);
+        if (i == new_block_count - 1) {
+            buf[file_len] = '\0';
+        }
         write_fileblock(buf, inode_in->block_point[i]);
+        free(buf);
     }
-    
+    // write_superblock_data(sp_ptr);
     return 0;
 }
 
@@ -1361,6 +1369,7 @@ uint32_t tee_single_arg(uint32_t cur_dir_inode_id, char *path_in) {
             sp_block *sp_ptr = read_superblock_data();
             write_file(sp_ptr, file_inode, data);
             edit_inode(file_inode, dest_inode_id);
+            write_superblock_data(sp_ptr);
             free(sp_ptr);
         }
         // make_file(dest_inode_id, path_out[path_count - 1]);
@@ -2010,6 +2019,14 @@ int main() {
                 } else {
                     ln(current_dir_inode_id, path_out[1], path_out[2]);
                 }
+            } else if (!strcmp(path_out[0], "spblock")) {
+                // printf("command: %s\n", path_out[0]);
+                sp_block *sp_ptr = read_superblock_data();
+                printf("Superblock data:\n");
+                printf("Free block count: %d\n", sp_ptr->free_block_count);
+                printf("Free inode count: %d\n", sp_ptr->free_inode_count);
+                printf("Dir inode count: %d\n", sp_ptr->dir_inode_count);
+                printf("Fileblock 32-63 allocation: %u\n", sp_ptr->block_map[1]);
             } else if (!strcmp(path_out[0], "shutdown")) {
                 // printf("command: %s\n", path_out[0]);
                 printf("Will exit Naive EXT2 File System! Would you like to format the disk? (Y/N): ");
